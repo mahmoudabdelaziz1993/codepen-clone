@@ -5,16 +5,20 @@ import "codemirror/theme/monokai.css"
 import "codemirror/mode/xml/xml"
 import "codemirror/mode/javascript/javascript"
 import "codemirror/mode/css/css"
+import 'codemirror/addon/edit/closetag'
+import 'codemirror/addon/scroll/simplescrollbars'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
-import { Minimize , Fullscreen } from '@material-ui/icons'
-import { Box, Typography, IconButton, makeStyles } from '@material-ui/core'
+import { Minimize, Fullscreen ,WebAsset } from '@material-ui/icons'
+import { Box, Typography, IconButton, makeStyles, Collapse } from '@material-ui/core'
 const useStyles = makeStyles({
     root: {
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
         flexBasis: 0,
-        padding: "1rem"
+        padding: "1rem",
+        maxWidth:'80%',
+        order:1
     },
     head: {
         borderTopRightRadius: "1rem",
@@ -23,13 +27,14 @@ const useStyles = makeStyles({
         color: '#ff7171',
         padding: '0 0 0 10px',
         display: 'flex',
-        justifyContent: 'space-around',
         alignItems: 'center '
 
     },
     wrapper: {
         flexGrow: 1,
-        overflow: 'hidden !important'
+        overflow: 'auto !important',
+        width: "100%",
+        maxHeight: "360px"
     }
 })
 
@@ -46,36 +51,49 @@ function Editor(props) {
 
     return (
         <Box className={classes.root}
-        style={{ flexGrow : ` ${open ? 1:0}`}}
-        id={open? "" :"collaps" }
+            style={{ flexGrow: ` ${open ? 1 : 0}` }}
+            id={open ? "" : "collaps"}
+
         >
             <Box className={classes.head}>
-                <Typography color='inherit' variant='body1'>
-                    {displayName}
-                </Typography>
-                <Box />
+                {open ?
+                    <Typography color='inherit' variant='body1'>
+                        {displayName} 
+                    </Typography>
+                    :
+                    <WebAsset/>
+                }
+
+                <Box style={{ flexGrow: 1 }} />
                 <IconButton
                     color='inherit'
-                    onClick={()=>setOpen(prevOpen=>!prevOpen)} 
-                    >
-                        {open? <Minimize /> :<Fullscreen/> }
-                   
+                    onClick={() => setOpen(prevOpen => !prevOpen)}
+                >
+                    {open ? <Minimize /> : <Fullscreen />}
+
                 </IconButton>
             </Box>
-            <ControlledEditor
-                onBeforeChange={handleChange}
-                value={value}
-                options={{
-                    lineWrapping: true,
-                    lint: true,
-                    mode: language,
-                    lineNumbers: true,
-                    theme: 'monokai',
-                    autocorrect: true
-                }}
-                className={classes.wrapper}
 
-            />
+            <Collapse in={open}>
+                <ControlledEditor
+                    onBeforeChange={handleChange}
+                    value={value}
+                    options={{
+                        lineWrapping: true,
+                        lint: true,
+                        mode: language,
+                        lineNumbers: true,
+                        theme: 'monokai',
+                        autoCloseTags:true,
+                    
+                        
+                    }}
+                    className={classes.wrapper}
+
+
+                />
+            </Collapse>
+
         </Box>
     )
 }

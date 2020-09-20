@@ -21,8 +21,8 @@ const useStyles = makeStyles({
     height: "100%",
     background: "#41444b",
     display: 'flex',
-    padding: '1rem',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-around',
+    flexWrap:"wrap"
   },
   appbottom: {
     width: '100%',
